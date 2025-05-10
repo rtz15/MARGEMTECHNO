@@ -1,11 +1,14 @@
-# Python
-backend/venv/
-__pycache__/
+# Python / Django
+venv/
 *.pyc
+__pycache__/
+db.sqlite3
 
-# Node
+# React / Node
 frontend/node_modules/
 frontend/build/
 
 # Outros
 .env
+*.log
+.DS_Store

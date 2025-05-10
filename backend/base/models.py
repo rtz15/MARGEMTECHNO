@@ -1,3 +1,41 @@
 from django.db import models
 
-# Create your models here.
+from django.db import models
+from django.contrib.auth.models import User
+
+class Post(models.Model):
+    autor = models.ForeignKey(User, on_delete=models.CASCADE)
+    conteudo = models.TextField()
+    imagem = models.ImageField(upload_to='posts/', blank=True, null=True)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+class Comentario(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    autor = models.ForeignKey(User, on_delete=models.CASCADE)
+    texto = models.TextField()
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+class Evento(models.Model):
+    titulo = models.CharField(max_length=100)
+    descricao = models.TextField()
+    data = models.DateTimeField()
+    imagem = models.ImageField(upload_to='eventos/', blank=True, null=True)
+    participantes = models.ManyToManyField(User, related_name="eventos_registados", blank=True)
+
+class Like(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    utilizador = models.ForeignKey(User, on_delete=models.CASCADE)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+class Compra(models.Model):
+    utilizador = models.ForeignKey(User, on_delete=models.CASCADE)
+    produto = models.CharField(max_length=100)
+    preco = models.DecimalField(max_digits=8, decimal_places=2)
+    data = models.DateTimeField(auto_now_add=True)
+
+class Produto(models.Model):
+    nome = models.CharField(max_length=100)
+    descricao = models.TextField()
+    preco = models.DecimalField(max_digits=8, decimal_places=2)
+    imagem = models.ImageField(upload_to='produtos/')
+    stock = models.IntegerField(default=0)
