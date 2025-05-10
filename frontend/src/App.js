@@ -1,26 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './components/Home';
+import Events from './pages/Events';
+import Videos from './pages/Videos';
+import MTSessions from './pages/MTSessions';
+import OurTeam from './pages/OurTeam';
+import Shop from './pages/Shop';
+import MTNation from './pages/MTNation';
+import Navbar from './components/Navbar';
+import './App.css'; // Import your global CSS file
 
 function App() {
-  const [produtos, setProdutos] = useState([]);
-
-  useEffect(() => {
-    fetch("http://localhost:8000/api/produtos/")
-      .then((res) => res.json())
-      .then((data) => setProdutos(data))
-      .catch((err) => console.error("Erro ao buscar produtos:", err));
-  }, []);
-
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Lista de Produtos</h1>
-      <ul>
-        {produtos.map((produto) => (
-          <li key={produto.id}>
-            {produto.nome} — €{produto.preco}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/videos" element={<Videos />} />
+        <Route path="/mt-sessions" element={<MTSessions />} />
+        <Route path="/our-team" element={<OurTeam />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/mt-nation" element={<MTNation />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
