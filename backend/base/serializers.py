@@ -14,7 +14,7 @@ class ComentarioSerializer(serializers.ModelSerializer):
 class EventoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evento
-        fields = '__all__'
+        fields = ['id', 'titulo', 'descricao', 'data', 'imagem', 'link']
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:

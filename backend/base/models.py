@@ -21,6 +21,10 @@ class Evento(models.Model):
     data = models.DateTimeField()
     imagem = models.ImageField(upload_to='eventos/', blank=True, null=True)
     participantes = models.ManyToManyField(User, related_name="eventos_registados", blank=True)
+    link = models.URLField(max_length=500, blank=True)
+    
+    def __str__(self):
+        return self.titulo
 
 class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

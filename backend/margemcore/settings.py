@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'base',
     'corsheaders',
     'django.contrib.admin',
@@ -124,3 +125,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True
+
+MEDIA_URL = '/media/' # permitir acesso às imagens do django
+MEDIA_ROOT = BASE_DIR / 'media'
