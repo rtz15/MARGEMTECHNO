@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.db.models import Q
+from django.utils import timezone
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Post, Comentario, Evento, Like, Compra, Produto
@@ -38,9 +40,20 @@ def comentarios(request):
 @api_view(['GET', 'POST'])
 def eventos(request):
     if request.method == 'GET':
-        lista = Evento.objects.all().order_by('data')
-        serializer = EventoSerializer(lista, many=True)
+        agora = timezone.now()
+        query = request.GET.get('q', '')  # Lê o parâmetro q da URL
+
+        eventos = Evento.objects.filter(data__gte=agora)
+
+        if query:
+            eventos = eventos.filter(
+                Q(titulo__icontains=query) | Q(descricao__icontains=query)
+            )
+
+        eventos = eventos.order_by('data')
+        serializer = EventoSerializer(eventos, many=True)
         return Response(serializer.data)
+
     elif request.method == 'POST':
         serializer = EventoSerializer(data=request.data)
         if serializer.is_valid():
@@ -86,4 +99,22 @@ def produtos(request):
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
+
+def search_all(request):
+    query = request.GET.get('q', '')
+
+    eventos = Evento.objects.filter(
+        Q(titulo__icontains=query) | Q(descricao__icontains=query)
+    )
+    produtos = Produto.objects.filter(
+        Q(nome__icontains=query) | Q(descricao__icontains=query)
+    )
+
+    eventos_serialized = EventoSerializer(eventos, many=True)
+    produtos_serialized = ProdutoSerializer(produtos, many=True)
+
+    return Response({
+        'eventos': eventos_serialized.data,
+        'produtos': produtos_serialized.data
+    })
     
