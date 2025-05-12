@@ -1,0 +1,45 @@
+.accessibility-page {
+  background-color: #000;
+  color: #fff;
+  padding: 3rem 5vw;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  text-align: left;
+}
+
+.accessibility-page h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.accessibility-page h3 {
+  font-size: 1.3rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  color: #ccc;
+}
+
+.accessibility-page p,
+.accessibility-page li {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.accessibility-page ul {
+  padding-left: 1.5rem;
+}
+
+.accessibility-page a {
+  color: #fff;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.accessibility-page a:hover {
+  color: #ccc;
+}

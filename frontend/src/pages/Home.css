@@ -1,0 +1,23 @@
+.home {
+  background-color: #000;
+  color: #eee;
+  min-height: 100vh;
+}
+
+.hero {
+  text-align: center;
+  padding: 1rem 1rem;
+}
+
+.homepage-logo {
+  width: 700px;
+  height: auto;
+  display: block;
+}
+
+.homepage-logo-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+

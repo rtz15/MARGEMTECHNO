@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
+import Home from './pages/Home';
 import Events from './pages/Events';
 import Videos from './pages/Videos';
 import MTSessions from './pages/MTSessions';
@@ -8,11 +8,25 @@ import OurTeam from './pages/OurTeam';
 import Shop from './pages/Shop';
 import MTNation from './pages/MTNation';
 import Navbar from './components/Navbar';
+import ShopCheckout from './pages/ShopCheckout';
+import Footer from './components/home/Footer';
+import AboutUs from './pages/AboutUs';
+import Support from './pages/Support';
+import Accessibility from './pages/Accessibility';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import CookiePolicy from './pages/CookiePolicy';
+import TermsAndConditions from './pages/TermsAndConditions';
+import ScrollToTop from './components/ScrollToTop';
+
 import './App.css'; // Import your global CSS file
+import SearchPage from './pages/SearchPage';
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop /> // para que a página comece sempre do topo
+      <Navbar />
+      
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/events" element={<Events />} />
@@ -21,7 +35,18 @@ function App() {
         <Route path="/our-team" element={<OurTeam />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/mt-nation" element={<MTNation />} />
+        <Route path="/shop/checkout" element={<ShopCheckout />} />
+        <Route path="/search" element={<SearchPage />} />
+        <Route path="/our-team" element={<OurTeam />} />
+        <Route path="/our-team/about-us" element={<AboutUs />} />
+        <Route path="/support" element={<Support />} />
+        <Route path="/accessibility" element={<Accessibility />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/cookie-policy" element={<CookiePolicy />} />
+        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
       </Routes>
+
+      <Footer />
     </BrowserRouter>
   );
 }
