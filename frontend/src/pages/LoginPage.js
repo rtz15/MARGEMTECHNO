@@ -1,34 +1,20 @@
 import { useState } from 'react';
-import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './LoginPage.css';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:8000/api/users/login/', {
-        email,
-        password,
-      });
-      localStorage.setItem('access', response.data.access);
-      localStorage.setItem('refresh', response.data.refresh);
-      alert('Login bem-sucedido!');
-      // Navegar para a homepage ou dashboard
-      navigate('/');
-    } catch (error) {
-      alert('Credenciais inválidas.');
-    }
+    console.log('Login:', email, password);
   };
 
   return (
     <div className="login-page">
-      <h2>LOGIN</h2>
-      <form className="login-form" onSubmit={handleLogin}>
+      <h2>Login</h2>
+      <form onSubmit={handleLogin} className="login-form">
         <input
           type="email"
           placeholder="Email"
@@ -43,11 +29,29 @@ function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">LOGIN</button>
+        <button type="submit">Login</button>
+        <p className="signup-text">
+          Ainda não tens uma conta? <Link to="/signup">Sign up aqui</Link>
+        </p>
       </form>
-      <p className="signup-link">
-        Ainda não tens uma conta? <Link to="/signup">Sign up aqui</Link>
-      </p>
+
+      <div className="divider">
+        <span className="line"></span>
+        <span className="or">ACCESS QUICKLY</span>
+        <span className="line"></span>
+      </div>
+
+      <div className="oauth-buttons">
+        <button className="oauth-btn google">
+          <img src="/icons/google-icon.svg" alt="Google" /> Google
+        </button>
+        <button className="oauth-btn microsoft">
+          <img src="/icons/microsoft-icon.svg" alt="Microsoft" /> Microsoft
+        </button>
+        <button className="oauth-btn apple">
+          <img src="/icons/apple-icon.svg" alt="Apple" /> Apple
+        </button>
+      </div>
     </div>
   );
 }

@@ -99,7 +99,8 @@ def produtos(request):
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
-
+    
+@api_view(['GET'])
 def search_all(request):
     query = request.GET.get('q', '')
 
@@ -110,11 +111,28 @@ def search_all(request):
         Q(nome__icontains=query) | Q(descricao__icontains=query)
     )
 
-    eventos_serialized = EventoSerializer(eventos, many=True)
-    produtos_serialized = ProdutoSerializer(produtos, many=True)
+    eventos_serialized = EventoSerializer(eventos, many=True).data
+    produtos_serialized = ProdutoSerializer(produtos, many=True).data
 
-    return Response({
-        'eventos': eventos_serialized.data,
-        'produtos': produtos_serialized.data
-    })
+    eventos_final = [{
+        'id': e['id'],
+        'tipo': 'evento',
+        'titulo': e['titulo'],
+        'descricao': e['descricao'],
+        'imagem': e['imagem'],
+        'link': f"/eventos/{e['id']}"  # ou o link real do teu projeto
+    } for e in eventos_serialized]
+
+    produtos_final = [{
+        'id': p['id'],
+        'tipo': 'produto',
+        'titulo': p['nome'],
+        'descricao': p['descricao'],
+        'imagem': p['imagem'],
+        'link': f"/produtos/{p['id']}"  # ou o link real do teu projeto
+    } for p in produtos_serialized]
+
+    resultados = eventos_final + produtos_final
+
+    return Response(resultados)
     

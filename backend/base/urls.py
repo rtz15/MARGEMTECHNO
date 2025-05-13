@@ -10,4 +10,5 @@ urlpatterns = [
     path('produtos/', views.produtos),
     path('search/', views.search_all),
     path('api/users/', include('users.urls')),
+    path('api/search/', views.search_all, name='search'),
 ]

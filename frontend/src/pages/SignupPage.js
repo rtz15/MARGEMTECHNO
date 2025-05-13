@@ -1,62 +1,66 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import './SignupPage.css';
+import './SearchPage.css';
 
-function SignupPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+function SearchPage() {
+  const [query, setQuery] = useState('');
+  const [resultados, setResultados] = useState([]);
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      alert('As palavras-passe não coincidem.');
+  useEffect(() => {
+    if (query.trim() === '') {
+      setResultados([]);
       return;
     }
-    try {
-      const response = await axios.post('http://localhost:8000/api/users/signup/', {
-        email,
-        password,
-      });
-      alert('Registo bem-sucedido! Já podes iniciar sessão.');
-    } catch (error) {
-      alert('Erro no registo. Tenta novamente.');
-    }
-  };
+
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8000/search/?q=${query}`);
+        setResultados(res.data);
+      } catch (err) {
+        console.error('Erro na pesquisa:', err);
+      }
+    };
+
+    fetchData();
+  }, [query]);
 
   return (
-    <div className="signup-page">
-      <h2>SIGNUP</h2>
-      <form className="signup-form" onSubmit={handleSignup}>
+    <div className="search-page">
+      <h2>What are you looking for?</h2>
+      <div className="search-bar-wrapper">
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
+          type="text"
+          placeholder="Pesquisar eventos e produtos..."
+          value={query}
+          onChange={e => setQuery(e.target.value)}
         />
-        <input
-          type="password"
-          placeholder="Palavra-passe"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Confirmar palavra-passe"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
-        <button type="submit">REGISTAR</button>
-      </form>
-      <p className="login-link">
-        Já tens uma conta? <Link to="/login">Inicia sessão aqui</Link>
-      </p>
+        <button>🔍</button>
+      </div>
+
+      <div className="search-results">
+        {resultados.map(item => (
+          <a
+            href={item.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="search-card"
+            key={`${item.tipo}-${item.id}`}
+          >
+            {item.imagem && (
+              <img
+                src={`http://localhost:8000${item.imagem}`}
+                alt={item.titulo}
+              />
+            )}
+            <div className="search-info">
+              <h3>{item.titulo}</h3>
+              <p className="item-descricao">{item.descricao}</p>
+            </div>
+          </a>
+        ))}
+      </div>
     </div>
   );
 }
 
-export default SignupPage;
+export default SearchPage;
