@@ -17,6 +17,8 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import CookiePolicy from './pages/CookiePolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
 import ScrollToTop from './components/ScrollToTop';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 
 import './App.css'; // Import your global CSS file
 import SearchPage from './pages/SearchPage';
@@ -44,6 +46,8 @@ function App() {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/cookie-policy" element={<CookiePolicy />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
       </Routes>
 
       <Footer />

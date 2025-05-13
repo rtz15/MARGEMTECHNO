@@ -24,7 +24,7 @@ function Navbar() {
             </div>
             <div className="navbar-section right">
                 <NavLink to="/search" className={({ isActive }) => isActive ? "active-link" : ""}>SEARCH</NavLink>
-                <span>LOGIN/SIGNUP</span>
+                <NavLink to="/login" className={({ isActive }) => isActive ? "active-link" : ""}>LOGIN/SIGNUP</NavLink>
             </div>
         </nav>
     );
