@@ -41,12 +41,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework_simplejwt',
+    'rest_framework.authtoken',
 ]
 
 REST_FRAMEWORK = {
-'DEFAULT_AUTHENTICATION_CLASSES': (
-'rest_framework_simplejwt.authentication.JWTAuthentication',
-)
+ 'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+ 'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 MIDDLEWARE = [
@@ -135,3 +140,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 MEDIA_URL = '/media/' # permitir acesso às imagens do django
 MEDIA_ROOT = BASE_DIR / 'media'
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # ou o URL onde corre o React
+]

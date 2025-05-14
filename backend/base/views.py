@@ -1,43 +1,121 @@
 from django.shortcuts import render
 from django.db.models import Q
 from django.utils import timezone
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 from .models import Post, Comentario, Evento, Like, Compra, Produto
 from .serializers import PostSerializer, ComentarioSerializer, EventoSerializer, LikeSerializer, CompraSerializer, ProdutoSerializer
-
 
 # Create your views here.
 
 from django.http import JsonResponse
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'DELETE', 'PUT'])
 def posts(request):
     if request.method == 'GET':
         lista = Post.objects.all()
         serializer = PostSerializer(lista, many=True)
         return Response(serializer.data)
+
     elif request.method == 'POST':
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(autor=request.user)
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-@api_view(['GET', 'POST'])
+    elif request.method == 'DELETE':
+        post_id = request.data.get('id')
+        if not post_id:
+            return Response({'detail': 'É necessário fornecer o ID do post a eliminar.'}, status=400)
+
+        try:
+            post = Post.objects.get(id=post_id)
+        except Post.DoesNotExist:
+            return Response({'detail': 'Post não encontrado.'}, status=404)
+
+        if post.autor != request.user and not request.user.groups.filter(name='Admin').exists():
+            return Response({'detail': 'Sem permissão para apagar este post.'}, status=403)
+
+        post.delete()
+        return Response({'detail': 'Post apagado com sucesso.'}, status=204)
+
+    elif request.method == 'PUT':
+        post_id = request.data.get('id')
+        if not post_id:
+            return Response({'detail': 'É necessário fornecer o ID do post a editar.'}, status=400)
+
+        try:
+            post = Post.objects.get(id=post_id)
+        except Post.DoesNotExist:
+            return Response({'detail': 'Post não encontrado.'}, status=404)
+
+        if post.autor != request.user and not request.user.groups.filter(name='Admin').exists():
+            return Response({'detail': 'Sem permissão para editar este post.'}, status=403)
+
+        serializer = PostSerializer(post, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
+
+@api_view(['GET', 'POST', 'DELETE', 'PUT'])
 def comentarios(request):
     if request.method == 'GET':
         lista = Comentario.objects.all()
         serializer = ComentarioSerializer(lista, many=True)
         return Response(serializer.data)
+
     elif request.method == 'POST':
         serializer = ComentarioSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(autor=request.user)
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
+    elif request.method == 'DELETE':
+        comentario_id = request.data.get('id')
+        if not comentario_id:
+            return Response({'detail': 'É necessário fornecer o ID do comentário a eliminar.'}, status=400)
+
+        try:
+            comentario = Comentario.objects.get(id=comentario_id)
+        except Comentario.DoesNotExist:
+            return Response({'detail': 'Comentário não encontrado.'}, status=404)
+
+        e_autor_do_comentario = comentario.autor == request.user
+        e_autor_do_post = comentario.post.autor == request.user
+        e_admin = request.user.groups.filter(name='Admin').exists()
+
+        if not (e_autor_do_comentario or e_autor_do_post or e_admin):
+            return Response({'detail': 'Sem permissão para apagar este comentário.'}, status=403)
+
+        comentario.delete()
+        return Response({'detail': 'Comentário apagado com sucesso.'}, status=204)
+
+    elif request.method == 'PUT':
+        comentario_id = request.data.get('id')
+        if not comentario_id:
+            return Response({'detail': 'É necessário fornecer o ID do comentário a editar.'}, status=400)
+
+        try:
+            comentario = Comentario.objects.get(id=comentario_id)
+        except Comentario.DoesNotExist:
+            return Response({'detail': 'Comentário não encontrado.'}, status=404)
+
+        # Só o autor do comentário pode editar
+        if comentario.autor != request.user:
+            return Response({'detail': 'Sem permissão para editar este comentário.'}, status=403)
+
+        serializer = ComentarioSerializer(comentario, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
+
 @api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
 def eventos(request):
     if request.method == 'GET':
         agora = timezone.now()
@@ -61,18 +139,27 @@ def eventos(request):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
 def likes(request):
-    if request.method == 'GET':
-        lista = Like.objects.all()
-        serializer = LikeSerializer(lista, many=True)
-        return Response(serializer.data)
-    elif request.method == 'POST':
-        serializer = LikeSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+    post_id = request.data.get('post')
+
+    if not post_id:
+        return Response({'detail': 'É necessário fornecer o ID do post.'}, status=400)
+
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return Response({'detail': 'Post não encontrado.'}, status=404)
+
+    # Verificar se o like já existe
+    like_existente = Like.objects.filter(post=post, utilizador=request.user).first()
+
+    if like_existente:
+        like_existente.delete()
+        return Response({'detail': 'Like removido.'}, status=204)
+    else:
+        Like.objects.create(post=post, utilizador=request.user)
+        return Response({'detail': 'Like adicionado.'}, status=201)
 
 @api_view(['GET', 'POST'])
 def compras(request):
@@ -83,11 +170,12 @@ def compras(request):
     elif request.method == 'POST':
         serializer = CompraSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(utilizador=request.user)  # <-- E aqui para compras
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
     
 @api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
 def produtos(request):
     if request.method == 'GET':
         lista = Produto.objects.all()
@@ -101,12 +189,14 @@ def produtos(request):
         return Response(serializer.errors, status=400)
     
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def search_all(request):
     query = request.GET.get('q', '')
 
     eventos = Evento.objects.filter(
         Q(titulo__icontains=query) | Q(descricao__icontains=query)
     )
+
     produtos = Produto.objects.filter(
         Q(nome__icontains=query) | Q(descricao__icontains=query)
     )
@@ -120,7 +210,7 @@ def search_all(request):
         'titulo': e['titulo'],
         'descricao': e['descricao'],
         'imagem': e['imagem'],
-        'link': f"/eventos/{e['id']}"  # ou o link real do teu projeto
+        'link': f"/eventos/{e['id']}"
     } for e in eventos_serialized]
 
     produtos_final = [{
@@ -129,10 +219,9 @@ def search_all(request):
         'titulo': p['nome'],
         'descricao': p['descricao'],
         'imagem': p['imagem'],
-        'link': f"/produtos/{p['id']}"  # ou o link real do teu projeto
+        'link': f"/produtos/{p['id']}"
     } for p in produtos_serialized]
 
     resultados = eventos_final + produtos_final
 
     return Response(resultados)
-    

@@ -26,7 +26,7 @@ import SearchPage from './pages/SearchPage';
 function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop /> // para que a página comece sempre do topo
+      <ScrollToTop />
       <Navbar />
       
       <Routes>

@@ -1,66 +1,87 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import './SearchPage.css';
+import { Link, useNavigate } from 'react-router-dom';
+import { saveToken } from '../utils/auth'; // importa aqui também
+import './SignupPage.css';
 
-function SearchPage() {
-  const [query, setQuery] = useState('');
-  const [resultados, setResultados] = useState([]);
+function SignupPage() {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (query.trim() === '') {
-      setResultados([]);
-      return;
-    }
+  const handleSignup = async (e) => {
+  e.preventDefault();
 
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(`http://localhost:8000/search/?q=${query}`);
-        setResultados(res.data);
-      } catch (err) {
-        console.error('Erro na pesquisa:', err);
-      }
-    };
+  if (password !== confirmPassword) {
+    alert('Passwords do not match.');
+    return;
+  }
 
-    fetchData();
-  }, [query]);
+  try {
+    // 1. Registo
+    await axios.post('http://localhost:8000/api/users/signup/', {
+      username,
+      email,
+      password,
+    });
+
+    // 2. Login automático após registo
+    const loginRes = await axios.post('http://localhost:8000/api/users/login/', {
+      username,
+      password,
+    });
+
+    const token = loginRes.data.token;
+    saveToken(token);
+
+    alert('Account successfully created! You are signed in.');
+    navigate('/home'); // ou redireciona onde quiseres
+  } catch (error) {
+    alert(error.response?.data?.error || 'Error on the register. Try again.');
+  }
+};
 
   return (
-    <div className="search-page">
-      <h2>What are you looking for?</h2>
-      <div className="search-bar-wrapper">
+    <div className="signup-page">
+      <h2>SIGNUP</h2>
+      <form className="signup-form" onSubmit={handleSignup}>
         <input
           type="text"
-          placeholder="Pesquisar eventos e produtos..."
-          value={query}
-          onChange={e => setQuery(e.target.value)}
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
         />
-        <button>🔍</button>
-      </div>
-
-      <div className="search-results">
-        {resultados.map(item => (
-          <a
-            href={item.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="search-card"
-            key={`${item.tipo}-${item.id}`}
-          >
-            {item.imagem && (
-              <img
-                src={`http://localhost:8000${item.imagem}`}
-                alt={item.titulo}
-              />
-            )}
-            <div className="search-info">
-              <h3>{item.titulo}</h3>
-              <p className="item-descricao">{item.descricao}</p>
-            </div>
-          </a>
-        ))}
-      </div>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+        <button type="submit">REGISTER</button>
+      </form>
+      <p className="login-link">
+        Already have an account? <Link to="/login">Sign in here</Link>
+      </p>
     </div>
   );
 }
 
-export default SearchPage;
+export default SignupPage;

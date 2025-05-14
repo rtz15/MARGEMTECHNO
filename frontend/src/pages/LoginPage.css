@@ -68,3 +68,8 @@
 .signup-link a:hover {
   color: #ccc;
 }
+
+.signup-text a {
+  color: white;
+  text-decoration: underline;
+}

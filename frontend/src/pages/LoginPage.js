@@ -1,19 +1,35 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
+import { saveToken } from '../utils/auth'; // importa aqui
 import './LoginPage.css';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log('Login:', email, password);
+    try {
+      const response = await axios.post('http://localhost:8000/api/users/login/', {
+        username: email,
+        password: password,
+      });
+
+      const token = response.data.token;
+      saveToken(token); // guarda o token no localStorage
+
+      alert('Login completed!');
+      navigate('/home'); // redireciona como já tinhas
+    } catch (error) {
+      alert('Error trying to sign in: ' + (error.response?.data?.non_field_errors || 'Unkown error'));
+    }
   };
 
   return (
     <div className="login-page">
-      <h2>Login</h2>
+      <h2>LOGIN</h2>
       <form onSubmit={handleLogin} className="login-form">
         <input
           type="email"
@@ -29,29 +45,11 @@ function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Login</button>
-        <p className="signup-text">
-          Ainda não tens uma conta? <Link to="/signup">Sign up aqui</Link>
+        <button type="submit">LOGIN</button>
+        <p className="login-link">
+          Still don't have an account? <Link to="/signup">Register here</Link>
         </p>
       </form>
-
-      <div className="divider">
-        <span className="line"></span>
-        <span className="or">ACCESS QUICKLY</span>
-        <span className="line"></span>
-      </div>
-
-      <div className="oauth-buttons">
-        <button className="oauth-btn google">
-          <img src="/icons/google-icon.svg" alt="Google" /> Google
-        </button>
-        <button className="oauth-btn microsoft">
-          <img src="/icons/microsoft-icon.svg" alt="Microsoft" /> Microsoft
-        </button>
-        <button className="oauth-btn apple">
-          <img src="/icons/apple-icon.svg" alt="Apple" /> Apple
-        </button>
-      </div>
     </div>
   );
 }

@@ -2,14 +2,18 @@ from rest_framework import serializers
 from .models import Post, Comentario, Evento, Like, Compra, Produto
 
 class PostSerializer(serializers.ModelSerializer):
+    autor = serializers.ReadOnlyField(source='autor.username')
+
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = ['id', 'autor', 'conteudo', 'imagem', 'criado_em']
 
 class ComentarioSerializer(serializers.ModelSerializer):
+    autor = serializers.ReadOnlyField(source='autor.username')
+
     class Meta:
         model = Comentario
-        fields = '__all__'
+        fields = ['id', 'post', 'autor', 'texto', 'criado_em']
 
 class EventoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,14 +21,18 @@ class EventoSerializer(serializers.ModelSerializer):
         fields = ['id', 'titulo', 'descricao', 'data', 'imagem', 'link']
 
 class LikeSerializer(serializers.ModelSerializer):
+    utilizador = serializers.ReadOnlyField(source='utilizador.username')
+
     class Meta:
         model = Like
-        fields = '__all__'
+        fields = ['id', 'post', 'utilizador', 'criado_em']
 
 class CompraSerializer(serializers.ModelSerializer):
+    utilizador = serializers.ReadOnlyField(source='utilizador.username')
+
     class Meta:
         model = Compra
-        fields = '__all__'
+        fields = ['id', 'utilizador', 'produto', 'preco', 'data']
 
 class ProdutoSerializer(serializers.ModelSerializer):
     class Meta:
