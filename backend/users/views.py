@@ -1,10 +1,24 @@
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
 
+class CustomAuthToken(ObtainAuthToken):
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        token, _ = Token.objects.get_or_create(user=self.user)
+        return Response({'token': token.key})
+
+@csrf_exempt
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def signup(request):
     username = request.data.get('username')
     email = request.data.get('email')

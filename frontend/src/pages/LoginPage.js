@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { saveToken } from '../utils/auth'; // importa aqui
+import { saveToken } from '../utils/auth';
 import './LoginPage.css';
 
 function LoginPage() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
@@ -13,17 +13,25 @@ function LoginPage() {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:8000/api/users/login/', {
-        username: email,
+        username: username,
         password: password,
       });
 
       const token = response.data.token;
-      saveToken(token); // guarda o token no localStorage
+      saveToken(token);
 
       alert('Login completed!');
-      navigate('/home'); // redireciona como já tinhas
+      navigate('/');
     } catch (error) {
-      alert('Error trying to sign in: ' + (error.response?.data?.non_field_errors || 'Unkown error'));
+      const errorData = error.response?.data;
+
+      if (errorData?.non_field_errors) {
+        alert('Login failed: ' + errorData.non_field_errors[0]);
+      } else if (errorData?.detail) {
+        alert('Login failed: ' + errorData.detail);
+      } else {
+        alert('Login failed: Unknown error.');
+      }
     }
   };
 
@@ -32,10 +40,10 @@ function LoginPage() {
       <h2>LOGIN</h2>
       <form onSubmit={handleLogin} className="login-form">
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
         <input

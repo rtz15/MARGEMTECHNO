@@ -29,7 +29,7 @@ function SignupPage() {
 
     // 2. Login automático após registo
     const loginRes = await axios.post('http://localhost:8000/api/users/login/', {
-      username,
+      email,
       password,
     });
 
