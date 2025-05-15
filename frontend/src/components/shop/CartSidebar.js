@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { CartContext } from '../../context/CartContext';
-import './CartSidebar.css';
+import '../../styles/CartSidebar.css';
 
 function CartSidebar({ isOpen, onClose }) {
   const {

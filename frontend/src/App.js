@@ -19,12 +19,14 @@ import TermsAndConditions from './pages/TermsAndConditions';
 import ScrollToTop from './components/ScrollToTop';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
-
+import { AuthProvider } from './context/AuthContext';
 import './App.css'; // Import your global CSS file
 import SearchPage from './pages/SearchPage';
+import RequireAuth from './components/auth/RequireAuth';
 
 function App() {
   return (
+    <AuthProvider>
     <BrowserRouter>
       <ScrollToTop />
       <Navbar />
@@ -36,8 +38,8 @@ function App() {
         <Route path="/mt-sessions" element={<MTSessions />} />
         <Route path="/our-team" element={<OurTeam />} />
         <Route path="/shop" element={<Shop />} />
-        <Route path="/mt-nation" element={<MTNation />} />
-        <Route path="/shop/checkout" element={<ShopCheckout />} />
+        <Route path="/mt-nation" element={ <RequireAuth><MTNation /></RequireAuth>} />
+        <Route path="/shop/checkout" element={<RequireAuth><ShopCheckout /></RequireAuth>} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/our-team" element={<OurTeam />} />
         <Route path="/our-team/about-us" element={<AboutUs />} />
@@ -52,6 +54,7 @@ function App() {
 
       <Footer />
     </BrowserRouter>
+    </AuthProvider>
   );
 }
 

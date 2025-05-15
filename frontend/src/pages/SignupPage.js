@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { saveToken } from '../utils/auth'; // importa aqui também
-import './SignupPage.css';
+import '../styles/SignupPage.css';
 
 function SignupPage() {
   const [username, setUsername] = useState('');
@@ -12,36 +11,39 @@ function SignupPage() {
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (password !== confirmPassword) {
-    alert('Passwords do not match.');
-    return;
-  }
+    if (password !== confirmPassword) {
+      alert('Passwords do not match.');
+      return;
+    }
 
-  try {
-    // 1. Registo
-    await axios.post('http://localhost:8000/api/users/signup/', {
-      username,
-      email,
-      password,
-    });
+    try {
+      await axios.post('http://localhost:8000/api/users/signup/', {
+        username,
+        email,
+        password,
+      });
 
-    // 2. Login automático após registo
-    const loginRes = await axios.post('http://localhost:8000/api/users/login/', {
-      email,
-      password,
-    });
+      alert('Account successfully created! Redirecting to login...');
+      navigate('/login');
+    } catch (error) {
+      const data = error.response?.data;
+      let errorMessage = 'Error on the register. Try again.';
 
-    const token = loginRes.data.token;
-    saveToken(token);
+      if (typeof data === 'string') {
+        errorMessage = data;
+      } else if (data?.error) {
+        errorMessage = data.error;
+      } else if (data?.username) {
+        errorMessage = 'Username: ' + data.username[0];
+      } else if (data?.email) {
+        errorMessage = 'Email: ' + data.email[0];
+      }
 
-    alert('Account successfully created! You are signed in.');
-    navigate('/home'); // ou redireciona onde quiseres
-  } catch (error) {
-    alert(error.response?.data?.error || 'Error on the register. Try again.');
-  }
-};
+      alert(errorMessage);
+    }
+  };
 
   return (
     <div className="signup-page">
@@ -78,7 +80,7 @@ function SignupPage() {
         <button type="submit">REGISTER</button>
       </form>
       <p className="login-link">
-        Already have an account? <Link to="/login">Sign in here</Link>
+        Already have an account? <Link to="/login">Login here</Link>
       </p>
     </div>
   );

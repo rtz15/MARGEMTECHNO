@@ -1,7 +1,8 @@
 import React from 'react';
-import './Navbar.css';
+import '../styles/Navbar.css';
 import logo from '../assets/logos/logo-margemtechno.png';
 import { Link, NavLink } from 'react-router-dom';
+import userIcon from '../assets/logos/profile-icon.png';
 
 function Navbar() {
     return (
@@ -19,12 +20,11 @@ function Navbar() {
                     <li><NavLink to="/mt-nation" className={({ isActive }) => isActive ? "active-link" : ""}>MT NATION</NavLink></li>
                     <li><NavLink to="/our-team" className={({ isActive }) => isActive ? "active-link" : ""}>OUR TEAM</NavLink></li>
                     <li><NavLink to="/shop" className={({ isActive }) => isActive ? "active-link" : ""}>SHOP</NavLink></li>
-
                 </ul>
             </div>
             <div className="navbar-section right">
-                <NavLink to="/search" className={({ isActive }) => isActive ? "active-link" : ""}>SEARCH</NavLink>
-                <NavLink to="/login" className={({ isActive }) => isActive ? "active-link" : ""}>LOGIN/SIGNUP</NavLink>
+                <NavLink to="/search" className={({ isActive }) => isActive ? "active-link no-hover" : "no-hover"}>SEARCH</NavLink>
+                <NavLink to="/login" className={({ isActive }) => isActive ? "active-link no-hover" : "no-hover"}>LOGIN/SIGNUP</NavLink>
             </div>
         </nav>
     );

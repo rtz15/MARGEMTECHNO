@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .models import Post, Comentario, Evento, Like, Compra, Produto
 from .serializers import PostSerializer, ComentarioSerializer, EventoSerializer, LikeSerializer, CompraSerializer, ProdutoSerializer
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
@@ -61,6 +62,7 @@ def posts(request):
         return Response(serializer.errors, status=400)
 
 @api_view(['GET', 'POST', 'DELETE', 'PUT'])
+@permission_classes([IsAuthenticated])  # ← agora exige autenticação
 def comentarios(request):
     if request.method == 'GET':
         lista = Comentario.objects.all()
@@ -70,7 +72,7 @@ def comentarios(request):
     elif request.method == 'POST':
         serializer = ComentarioSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(autor=request.user)
+            serializer.save(autor=request.user)  # ← atribui o utilizador autenticado
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
@@ -104,7 +106,6 @@ def comentarios(request):
         except Comentario.DoesNotExist:
             return Response({'detail': 'Comentário não encontrado.'}, status=404)
 
-        # Só o autor do comentário pode editar
         if comentario.autor != request.user:
             return Response({'detail': 'Sem permissão para editar este comentário.'}, status=403)
 
@@ -210,7 +211,7 @@ def search_all(request):
         'titulo': e['titulo'],
         'descricao': e['descricao'],
         'imagem': e['imagem'],
-        'link': f"/eventos/{e['id']}"
+         'link': e['link']
     } for e in eventos_serialized]
 
     produtos_final = [{
@@ -219,9 +220,28 @@ def search_all(request):
         'titulo': p['nome'],
         'descricao': p['descricao'],
         'imagem': p['imagem'],
-        'link': f"/produtos/{p['id']}"
+        'link': '/shop'
     } for p in produtos_serialized]
 
     resultados = eventos_final + produtos_final
 
     return Response(resultados)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_likes(request):
+    user = request.user
+    likes = Like.objects.filter(utilizador=user).values_list('post_id', flat=True)
+    return Response(list(likes))
+
+@api_view(['POST', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def toggle_like(request, post_id):
+    user = request.user
+    try:
+        like = Like.objects.get(utilizador=user, post_id=post_id)
+        like.delete()
+        return Response({'liked': False})
+    except Like.DoesNotExist:
+        Like.objects.create(utilizador=user, post_id=post_id)
+        return Response({'liked': True})

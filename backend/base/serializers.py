@@ -6,14 +6,13 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'autor', 'conteudo', 'imagem', 'criado_em']
+        fields = ['id', 'autor', 'conteudo', 'imagem', 'video', 'criado_em']
 
 class ComentarioSerializer(serializers.ModelSerializer):
-    autor = serializers.ReadOnlyField(source='autor.username')
-
     class Meta:
         model = Comentario
-        fields = ['id', 'post', 'autor', 'texto', 'criado_em']
+        fields = '__all__'
+        read_only_fields = ['autor', 'criado_em']
 
 class EventoSerializer(serializers.ModelSerializer):
     class Meta:

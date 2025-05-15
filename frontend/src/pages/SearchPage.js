@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import './SearchPage.css';
+import '../styles/SearchPage.css';
 
 function SearchPage() {
   const [query, setQuery] = useState('');

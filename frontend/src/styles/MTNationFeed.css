@@ -1,0 +1,21 @@
+.mtnation-feed {
+  background-color: #000;
+  color: white;
+  min-height: 100vh;
+  padding: 3rem 1rem;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.mtnation-feed h2 {
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.no-posts {
+  font-size: 1rem;
+  color: #aaa;
+  margin-top: 2rem;
+}

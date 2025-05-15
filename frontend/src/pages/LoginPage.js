@@ -1,26 +1,48 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { saveToken } from '../utils/auth';
-import './LoginPage.css';
+import { AuthContext } from '../context/AuthContext';
+import '../styles/LoginPage.css';
+
+const getCSRFToken = async () => {
+  await axios.get('http://localhost:8000/api/users/csrf/', {
+    withCredentials: true,
+  });
+};
+
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  if (match) return match[2];
+}
 
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  const { fetchUser } = useContext(AuthContext); // ← importante
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/api/users/login/', {
-        username: username,
-        password: password,
-      });
+      await getCSRFToken(); // ← carrega o cookie CSRF
 
-      const token = response.data.token;
-      saveToken(token);
+      await axios.post(
+        'http://localhost:8000/api/users/login/',
+        {
+          username: username,
+          password: password,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+        }
+      );
 
-      alert('Login completed!');
+      await fetchUser(); // ← atualiza o estado global com os dados do user
+      alert('Login successful!');
       navigate('/');
     } catch (error) {
       const errorData = error.response?.data;

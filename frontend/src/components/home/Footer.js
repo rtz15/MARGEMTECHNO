@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Footer.css';
+import '../../styles/Footer.css';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logos/logo-margemtechno.png';
 

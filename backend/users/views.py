@@ -1,21 +1,14 @@
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import AllowAny
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
 
-class CustomAuthToken(ObtainAuthToken):
-    permission_classes = [AllowAny]
-
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-        token, _ = Token.objects.get_or_create(user=self.user)
-        return Response({'token': token.key})
-
+# -------------------
+# SIGNUP
+# -------------------
 @csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -36,6 +29,59 @@ def signup(request):
     user = User.objects.create_user(username=username, email=email, password=password)
     return Response({'message': f'Account {user.username} created!'}, status=status.HTTP_201_CREATED)
 
+# -------------------
+# LOGIN
+# -------------------
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login_view(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    user = authenticate(request, username=username, password=password)
+
+    if user is not None:
+        login(request, user)
+        return Response({'message': 'Login successful'})
+    else:
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+
+# -------------------
+# LOGOUT
+# -------------------
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def logout_view(request):
+    logout(request)
+    return Response({'message': 'Logged out successfully'})
+
+# -------------------
+# CSRF COOKIE (necessário para frontend com SessionAuthentication)
+# -------------------
+@api_view(['GET'])
+@permission_classes([AllowAny])
+@ensure_csrf_cookie
+def csrf(request):
+    return Response({'message': 'CSRF cookie set'})
+
+# -------------------
+# USER VIEW (este é o mais importante)
+# Protege esta rota — é aqui que AuthContext vai confirmar login
+# -------------------
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_view(request):
+    return Response({
+        'id': request.user.id,
+        'username': request.user.username,
+        'email': request.user.email,
+        'is_admin': request.user.is_staff,
+    })
+
+# -------------------
+# INFO EXTRA (opcional)
+# -------------------
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_info(request):
