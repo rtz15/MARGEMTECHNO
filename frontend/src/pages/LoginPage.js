@@ -42,8 +42,10 @@ function LoginPage() {
       );
 
       await fetchUser(); // ← atualiza o estado global com os dados do user
-      alert('Login successful!');
-      navigate('/');
+      setTimeout(() => {
+        alert('Login successful!');
+        navigate('/');
+      }, 100);
     } catch (error) {
       const errorData = error.response?.data;
 

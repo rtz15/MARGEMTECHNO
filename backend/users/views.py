@@ -77,6 +77,7 @@ def user_view(request):
         'username': request.user.username,
         'email': request.user.email,
         'is_admin': request.user.is_staff,
+        'date_joined': request.user.date_joined.isoformat(),
     })
 
 # -------------------

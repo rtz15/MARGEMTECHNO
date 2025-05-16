@@ -4,13 +4,13 @@ import axiosInstance from '../utils/axiosInstance';
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null); // null = loading | {} = authenticated | false = guest
+  const [user, setUser] = useState(undefined); // null = loading | {} = authenticated | false = guest
 
   const fetchUser = async () => {
     try {
       const res = await axiosInstance.get('/users/me/', { withCredentials: true });
       setUser(res.data);
-    } catch {
+    } catch (err) {
       setUser(false); // não autenticado
     }
   };

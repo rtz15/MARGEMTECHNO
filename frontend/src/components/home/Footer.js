@@ -13,9 +13,9 @@ function Footer() {
     <footer className="footer">
       <div className="footer-newsletter">
         <h2>
-          SIGN UP TO OUR MAILING LIST FOR <br />
-          SO YOU CAN JOIN THE NATION <br />
-          PLUS EXCLUSIVE ACCESS TO NEWS AND EVENTS.
+          SIGN UP TO OUR MAILING LIST <br />
+          SO YOU CAN JOIN THE NATION PLUS<br />
+          EXCLUSIVE ACCESS TO NEWS AND EVENTS.
         </h2>
         <form className="newsletter-form">
           <input type="email" placeholder="Enter your email" required />
