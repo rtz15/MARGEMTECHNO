@@ -20,12 +20,12 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const { fetchUser } = useContext(AuthContext); // ← importante
+  const { fetchUser } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await getCSRFToken(); // ← carrega o cookie CSRF
+      await getCSRFToken();
 
       await axios.post(
         'http://localhost:8000/api/users/login/',
@@ -41,7 +41,7 @@ function LoginPage() {
         }
       );
 
-      await fetchUser(); // ← atualiza o estado global com os dados do user
+      await fetchUser();
       setTimeout(() => {
         alert('Login successful!');
         navigate('/');
@@ -61,6 +61,16 @@ function LoginPage() {
 
   return (
     <div className="login-page">
+      <div className="member-benefits">
+        <h3>BECOME A MEMBER 🔒</h3>
+        <ul>
+          <li>Access to MTNATION</li>
+          <li>Invites to Exclusive Events</li>
+          <li>Special Offers and Discounts</li>
+          <li>Private Whatsapp Group</li>
+          <li>Save your Favorite Sets</li>
+        </ul>
+      </div>
       <h2>LOGIN</h2>
       <form onSubmit={handleLogin} className="login-form">
         <input

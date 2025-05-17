@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: center;
   font-family: Arial, sans-serif;
-  padding: 2rem;
+  padding: 0;
 }
 
 .signup-page h2 {
@@ -68,4 +68,27 @@
 
 .login-link a:hover {
   color: #ccc;
+}
+
+.member-benefits {
+  margin-top: 2rem;
+  font-size: 0.95rem;
+  color: #ccc;
+  text-align: left;
+  max-width: 400px;
+}
+
+.member-benefits p {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.member-benefits ul {
+  padding-left: 1.2rem;
+  list-style-type: disc;
+}
+
+.member-benefits li {
+  margin-bottom: 0.4rem;
 }

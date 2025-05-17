@@ -47,6 +47,16 @@ function SignupPage() {
 
   return (
     <div className="signup-page">
+      <div className="member-benefits">
+        <h3>BECOME A MEMBER 🔒</h3>
+        <ul>
+          <li>Access to MTNATION</li>
+          <li>Invites to Exclusive Events</li>
+          <li>Special Offers and Discounts</li>
+          <li>Private Whatsapp Group</li>
+          <li>Save your Favorite Sets</li>
+        </ul>
+      </div>  
       <h2>SIGNUP</h2>
       <form className="signup-form" onSubmit={handleSignup}>
         <input

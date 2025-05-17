@@ -23,13 +23,14 @@ import { AuthProvider } from './context/AuthContext';
 import './App.css';
 import SearchPage from './pages/SearchPage';
 import RequireAuth from './components/auth/RequireAuth';
+import Faq from './pages/FaqPage'; // Import the Faq component
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <ScrollToTop />
-        <Navbar />
+        <Navbar />  
 
         <Routes>
           <Route path="/" element={<Home />} />
@@ -48,7 +49,8 @@ function App() {
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route path="/perfil" element={<RequireAuth><ViewProfile /></RequireAuth>} /> {/* NOVA ROTA */}
+          <Route path="/perfil" element={<RequireAuth><ViewProfile /></RequireAuth>} />
+          <Route path="/faq" element={<Faq />} />
         </Routes>
 
         <Footer />
