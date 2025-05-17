@@ -7,6 +7,11 @@ const team = [
     nome: "Martinho Basso",
     funcao: "FOUNDER",
     imagem: "./team/Marte.jpg",
+    backInfo: (
+      <>
+        <p><a href="https://instagram.com/martinho_basso" target="_blank" rel="noreferrer">Instagram</a></p>
+      </>
+    ),
   },
   {
     nome: "Hernâni Mourão",
@@ -14,52 +19,73 @@ const team = [
     imagem: "./team/Hernas.jpg",
     backInfo: (
       <>
-        <p><a href="https://soundcloud.com/hernasdj" target="_blank" rel="noreferrer">SoundCloud</a></p>
-        <p><a href="https://instagram.com/hernas.dj" target="_blank" rel="noreferrer">Instagram</a></p>
+        <p><a href="https://soundcloud.com/hernas1" target="_blank" rel="noreferrer">SoundCloud</a></p>
+        <p><a href="https://instagram.com/hernas._" target="_blank" rel="noreferrer">Instagram</a></p>
       </>
     ),
   },
   {
     nome: "Matilde Gine",
     funcao: "COFOUNDER, DESIGN TEAM",
-    imagem: "/team/Gine.jpg",
+    imagem: "./team/Gine.jpg",
+    backInfo: (
+      <>
+        <p><a href="https://instagram.com/matilde_ginsantos" target="_blank" rel="noreferrer">Instagram</a></p>
+      </>
+    ),
   },
   {
     nome: "Lourenço Magalhães",
     funcao: "COFOUNDER",
-    imagem: "/team/lourenco.jpg",
+    imagem: "./team/lori.jpg",
+    backInfo: (
+      <>
+        <p><a href="https://instagram.com/lourencomagalhaes_" target="_blank" rel="noreferrer">Instagram</a></p>
+      </>
+    ),
   },
   {
     nome: "Gabriel Ribeiro",
     funcao: "COFOUNDER & DESIGN TEAM",
-    imagem: "/images/gabriel.jpg",
+    imagem: "./team/gabriel.jpg",
+    backInfo: (
+      <>
+        <p><a href="https://instagram.com/gabrielp.ribeiro" target="_blank" rel="noreferrer">Instagram</a></p>
+      </>
+    ),
   },
   {
     nome: "Gonçalo Taia",
     funcao: "COFOUNDER & DJ (Dewon)",
-    imagem: "/images/goncalo.jpg",
+    imagem: "./team/GonçaloTaia.jpg",
     backInfo: (
       <>
-        <p><a href="https://soundcloud.com/dewon" target="_blank" rel="noreferrer">SoundCloud</a></p>
-        <p><a href="https://instagram.com/dewon.dj" target="_blank" rel="noreferrer">Instagram</a></p>
+        <p><a href="https://soundcloud.com/user-274639386" target="_blank" rel="noreferrer">SoundCloud</a></p>
+        <p><a href="https://instagram.com/dewon._" target="_blank" rel="noreferrer">Instagram</a></p>
+        <p><a href="https://linktr.ee/Querias" target="_blank" rel="noreferrer">Linktree</a></p>
       </>
     ),
   },
   {
     nome: "Henrique Reynaud",
     funcao: "COFOUNDER & DJ (Jobels)",
-    imagem: "/images/henrique.jpg",
+    imagem: "./team/henrique.jpg",
     backInfo: (
       <>
-        <p><a href="https://soundcloud.com/jobels" target="_blank" rel="noreferrer">SoundCloud</a></p>
-        <p><a href="https://instagram.com/jobels.dj" target="_blank" rel="noreferrer">Instagram</a></p>
+        <p><a href="https://soundcloud.com/henrique-sm-reynaud" target="_blank" rel="noreferrer">SoundCloud</a></p>
+        <p><a href="https://instagram.com/henrique.reynaud" target="_blank" rel="noreferrer">Instagram</a></p>
       </>
     ),
   },
   {
     nome: "Tiago Pereira",
     funcao: "IT & DESIGN TEAM",
-    imagem: "/team/tiago.jpg",
+    imagem: "./team/tiago.jpeg",
+    backInfo: (
+      <>
+        <p><a href="https://instagram.com/tiaago15" target="_blank" rel="noreferrer">Instagram</a></p>
+      </>
+    ),
   },
 ];
 

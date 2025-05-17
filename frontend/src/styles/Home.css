@@ -4,11 +4,6 @@
   min-height: 100vh;
 }
 
-.hero {
-  text-align: center;
-  padding: 1rem 1rem;
-}
-
 .homepage-logo {
   width: 700px;
   height: auto;
@@ -19,5 +14,25 @@
   display: flex;
   justify-content: center;
   margin-top: 3rem;
+}
+
+.homepage-logo-container:nth-of-type(2) {
+  margin-top: 1rem;       
+  margin-bottom: 3rem;    
+}
+
+.madeforhard {
+  height: auto;
+  display: block;
+}
+
+.homebackg {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  display: block;
+  object-fit: cover;
+  object-position: center;
 }
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import '../styles/Home.css';
 import logo from '../assets/logos/MTFundo.png';
+import eletrica from '../assets/backgimages/eletrica.png';
+import madeforhard from '../assets/backgimages/madeforhard.png';
 
 function Home() {
   return (
@@ -8,9 +10,12 @@ function Home() {
       <div className="homepage-logo-container">
         <img src={logo} alt="MargemTechno Logo" className="homepage-logo" />
       </div>
-      <section className="hero">
-        <h1>MADE FOR HARD</h1>
-      </section>
+      <div className="homepage-logo-container">
+        <img src={madeforhard} className="madeforhard" />
+      </div>
+      <div>
+        <img src={eletrica} className="homebackg" />
+      </div>
     </div>
   );
 }
