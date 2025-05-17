@@ -13,4 +13,6 @@ urlpatterns = [
     path('api/search/', views.search_all, name='search-all'),
     path('likes/user/', user_likes),
     path('likes/toggle/<int:post_id>/', toggle_like),
+    path('likes/count/<int:post_id>/', views.like_count_view),
+    path('posts/delete/<int:post_id>/', views.delete_post, name='delete-post'),
 ]

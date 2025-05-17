@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom'; // 👈 IMPORTANTE
 import '../styles/SearchPage.css';
 
 function SearchPage() {
@@ -7,22 +8,22 @@ function SearchPage() {
   const [resultados, setResultados] = useState([]);
 
   useEffect(() => {
-  if (query.trim() === '') {
-    setResultados([]);
-    return;
-  }
-
-  const fetchData = async () => {
-    try {
-      const res = await axios.get(`http://localhost:8000/api/search/?q=${query}`);
-      setResultados(res.data);
-    } catch (err) {
-      console.error('Erro na pesquisa:', err);
+    if (query.trim() === '') {
+      setResultados([]);
+      return;
     }
-  };
 
-  fetchData();
-}, [query]);
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8000/api/search/?q=${query}`);
+        setResultados(res.data);
+      } catch (err) {
+        console.error('Erro na pesquisa:', err);
+      }
+    };
+
+    fetchData();
+  }, [query]);
 
   return (
     <div className="search-page">
@@ -55,10 +56,8 @@ function SearchPage() {
 
       <div className="search-results">
         {resultados.map(item => (
-          <a
-            href={item.link || '#'}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to={item.link || '/shop'} // 👈 usa "to" em vez de "href"
             className="search-card"
             key={`${item.tipo}-${item.id}`}
           >
@@ -75,7 +74,7 @@ function SearchPage() {
               {item.descricao && <p className="event-descricao">{item.descricao}</p>}
               {item.tipo === 'produto' && <p className="event-date">Produto</p>}
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </div>

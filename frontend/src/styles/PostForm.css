@@ -30,20 +30,21 @@
 
 .custom-file-button,
 .publish-button {
-  background-color: #fff;
-  color: #000;
+  background-color: transparent;
+  color: #fff;
   padding: 0.4rem 1rem;
-  border: none;
-  border-radius: 0;
+  border: 1px solid #fff;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: normal;
+  font-weight: bold;
   font-size: 0.95rem;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .custom-file-button:hover,
 .publish-button:hover {
-  background-color: #ddd;
+  background-color: #fff;
+  color: #000;
 }
 
 .file-name {

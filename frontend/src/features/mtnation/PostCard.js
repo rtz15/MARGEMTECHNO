@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../utils/axiosInstance';
 import '../../styles/PostCard.css';
 
-// CSRF token helpers
 function getCookie(name) {
   const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
   return match ? match[2] : null;
@@ -17,7 +16,7 @@ async function getCSRFToken() {
 }
 
 function PostCard({ post, currentUser, onDelete }) {
-  const [likesCount, setLikesCount] = useState(post.likes_count || 0);
+  const [likesCount, setLikesCount] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [comentarios, setComentarios] = useState([]);
   const [novoComentario, setNovoComentario] = useState('');
@@ -26,22 +25,25 @@ function PostCard({ post, currentUser, onDelete }) {
     post?.autor === currentUser?.username || currentUser?.is_admin;
 
   useEffect(() => {
-    const fetchInitialData = async () => {
+    const fetchData = async () => {
       try {
-        const [likesRes, comentariosRes] = await Promise.all([
+        const [likesCountRes, userLikesRes, allComentariosRes] = await Promise.all([
+          axiosInstance.get(`/likes/count/${post.id}/`),
           axiosInstance.get('/likes/user/'),
           axiosInstance.get('/comentarios/')
         ]);
 
-        setIsLiked(likesRes.data.includes(post.id));
-        const comentariosDoPost = comentariosRes.data.filter(c => c.post === post.id);
+        setLikesCount(likesCountRes.data.count);
+        setIsLiked(userLikesRes.data.includes(post.id));
+
+        const comentariosDoPost = allComentariosRes.data.filter(c => c.post === post.id);
         setComentarios(comentariosDoPost);
       } catch (err) {
         console.error('Erro ao carregar dados iniciais:', err);
       }
     };
 
-    fetchInitialData();
+    fetchData();
   }, [post.id]);
 
   const handleLikeToggle = async () => {
@@ -91,9 +93,25 @@ function PostCard({ post, currentUser, onDelete }) {
       setNovoComentario('');
     } catch (err) {
       alert('Erro ao adicionar comentário.');
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await getCSRFToken();
+      await axiosInstance.delete(`/posts/delete/${post.id}/`, {
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken'),
+        },
+        withCredentials: true,
+      });
+      onDelete(post.id); // remove do frontend
+    } catch (err) {
+      alert('Erro ao excluir o post.');
       console.error(err.response?.data || err);
     }
   };
+
 
   if (!post) return null;
 
@@ -125,21 +143,21 @@ function PostCard({ post, currentUser, onDelete }) {
 
       <div className="post-footer">
         <button
-          className={`like-btn ${isLiked ? 'liked' : ''}`}
+          className={`like-btn styled-button ${isLiked ? 'liked' : ''}`}
           onClick={handleLikeToggle}
         >
           ❤️ {likesCount}
         </button>
 
         {isOwnerOrAdmin && (
-          <button className="delete-btn" onClick={() => onDelete(post.id)}>
+          <button className="styled-button delete-btn" onClick={handleDelete}>
             Delete
           </button>
         )}
       </div>
 
       <div className="comentarios">
-        <h4 style={{ textAlign: 'left' }}>Comentários</h4>
+        <h4>Comments</h4>
         {comentarios.map(com => (
           <div key={com.id} className="comentario">
             <strong>{com.autor}</strong>: {com.conteudo}
@@ -152,10 +170,10 @@ function PostCard({ post, currentUser, onDelete }) {
               type="text"
               value={novoComentario}
               onChange={(e) => setNovoComentario(e.target.value)}
-              placeholder="Escreve um comentário..."
+              placeholder="Write a comment..."
               required
             />
-            <button type="submit">Comentar</button>
+            <button type="submit" className="styled-button">Comentar</button>
           </form>
         )}
       </div>

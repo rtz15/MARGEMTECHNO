@@ -245,3 +245,26 @@ def toggle_like(request, post_id):
     except Like.DoesNotExist:
         Like.objects.create(utilizador=user, post_id=post_id)
         return Response({'liked': True})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def like_count_view(request, post_id):
+    user = request.user
+    total_likes = Like.objects.filter(post_id=post_id).count()
+    user_liked = Like.objects.filter(post_id=post_id, utilizador=user).exists()
+    return Response({'count': total_likes, 'user_liked': user_liked})
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_post(request, post_id):
+    try:
+        post = Post.objects.get(id=post_id)
+
+        if post.autor != request.user and not request.user.is_staff:
+            return Response({'detail': 'Sem permissão para apagar este post.'}, status=403)
+
+        post.delete()
+        return Response({'detail': 'Post excluído com sucesso.'}, status=204)
+
+    except Post.DoesNotExist:
+        return Response({'detail': 'Post não encontrado.'}, status=404)

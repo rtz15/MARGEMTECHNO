@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Events from './pages/Events';
-import Videos from './pages/Videos';
 import MTSessions from './pages/MTSessions';
 import OurTeam from './pages/OurTeam';
 import Shop from './pages/Shop';
@@ -34,8 +33,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/videos" element={<Videos />} />
+          <Route path="/events" element={<Events />} /> 
           <Route path="/mt-sessions" element={<MTSessions />} />
           <Route path="/our-team" element={<OurTeam />} />
           <Route path="/shop" element={<Shop />} />

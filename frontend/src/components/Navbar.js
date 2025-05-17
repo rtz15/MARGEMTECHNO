@@ -28,7 +28,6 @@ function Navbar() {
                 <div className="navbar-section center">
                     <ul className="navbar-menu">
                         <li><NavLink to="/events" className={({ isActive }) => isActive ? "active-link" : ""}>EVENTS</NavLink></li>
-                        <li><NavLink to="/videos" className={({ isActive }) => isActive ? "active-link" : ""}>VIDEOS</NavLink></li>
                         <li><NavLink to="/mt-sessions" className={({ isActive }) => isActive ? "active-link" : ""}>MT SESSIONS</NavLink></li>
                         <li><NavLink to="/mt-nation" className={({ isActive }) => isActive ? "active-link" : ""}>MT NATION</NavLink></li>
                         <li><NavLink to="/our-team" className={({ isActive }) => isActive ? "active-link" : ""}>OUR TEAM</NavLink></li>
