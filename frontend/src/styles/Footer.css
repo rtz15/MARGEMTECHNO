@@ -115,3 +115,9 @@ footer {
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
 }
+
+.newsletter-success {
+  color: #00e676;
+  margin-top: 0.5rem;
+  font-weight: bold;
+}

@@ -1,9 +1,11 @@
+/* Layout base */
 .home {
   background-color: #000;
   color: #eee;
   min-height: 100vh;
 }
 
+/* Logo principal */
 .homepage-logo {
   width: 700px;
   height: auto;
@@ -17,15 +19,17 @@
 }
 
 .homepage-logo-container:nth-of-type(2) {
-  margin-top: 1rem;       
-  margin-bottom: 3rem;    
+  margin-top: 1rem;
+  margin-bottom: 3rem;
 }
 
+/* Imagem "Made for Hard" */
 .madeforhard {
   height: auto;
   display: block;
 }
 
+/* Imagem de fundo */
 .homebackg {
   width: 100%;
   height: auto;
@@ -36,3 +40,78 @@
   object-position: center;
 }
 
+/* Secções reutilizáveis (evento, set, produto, testemunhos) */
+.home-section {
+  background-color: #111;
+  text-align: center;
+  padding: 2rem;
+  margin: 4rem auto;
+  max-width: 600px;
+  color: white;
+}
+
+/* Texto dentro das secções */
+.home-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.home-section p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  color: #ccc;
+}
+
+/* Media */
+.home-section iframe {
+  width: 100%;
+  max-width: 500px;
+  border: none;
+  margin-bottom: 1rem;
+}
+
+.home-section img {
+  margin: 1rem 0;
+  max-width: 200px;
+  height: auto;
+}
+
+/* Testemunhos específicos */
+.home-section blockquote {
+  font-style: italic;
+  margin: 1rem 0;
+  color: #ccc;
+}
+
+/* Botões */
+.event-btn {
+  display: inline-block;
+  background-color: white;
+  color: black;
+  padding: 0.5rem 1.2rem;
+  font-weight: bold;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  font-size: 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+.event-btn:hover {
+  background-color: #f04dff;
+  color: white;
+}
+
+/* Variação (opcional) */
+.event-btn.highlight {
+  background-color: #f04dff;
+  color: white;
+}
+
+.event-btn.highlight:hover {
+  background-color: white;
+  color: black;
+}

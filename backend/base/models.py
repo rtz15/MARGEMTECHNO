@@ -30,15 +30,31 @@ class Like(models.Model):
     utilizador = models.ForeignKey(User, on_delete=models.CASCADE)
     criado_em = models.DateTimeField(auto_now_add=True)
 
-class Compra(models.Model):
-    utilizador = models.ForeignKey(User, on_delete=models.CASCADE)
-    produto = models.CharField(max_length=100)
-    preco = models.DecimalField(max_digits=8, decimal_places=2)
-    data = models.DateTimeField(auto_now_add=True)
-
 class Produto(models.Model):
     nome = models.CharField(max_length=100)
     descricao = models.TextField()
     preco = models.DecimalField(max_digits=8, decimal_places=2)
     imagem = models.ImageField(upload_to='produtos/')
     stock = models.IntegerField(default=0)
+    
+
+class Compra(models.Model):
+    utilizador = models.ForeignKey(User, on_delete=models.CASCADE)
+    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    preco = models.DecimalField(max_digits=8, decimal_places=2)
+    data = models.DateTimeField(auto_now_add=True)
+    quantidade = models.IntegerField(default=1)
+
+class Entrega(models.Model):
+    utilizador = models.ForeignKey(User, on_delete=models.CASCADE)
+    nome = models.CharField(max_length=100)
+    email = models.EmailField()
+    telefone = models.CharField(max_length=20)
+    morada = models.CharField(max_length=200)
+    cidade = models.CharField(max_length=100)
+    codigo_postal = models.CharField(max_length=20)
+    metodo_pagamento = models.CharField(max_length=50)
+    data = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Entrega de {self.utilizador.username} em {self.morada}'

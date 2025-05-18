@@ -9,6 +9,7 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ['id', 'autor', 'conteudo', 'imagem', 'video', 'criado_em']
 
 class ComentarioSerializer(serializers.ModelSerializer):
+    autor = serializers.ReadOnlyField(source='autor.username')
     class Meta:
         model = Comentario
         fields = '__all__'

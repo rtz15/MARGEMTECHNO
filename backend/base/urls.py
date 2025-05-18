@@ -11,6 +11,7 @@ urlpatterns = [
     path('produtos/', views.produtos),
     path('search/', views.search_all),
     path('api/search/', views.search_all, name='search-all'),
+    path('checkout/', views.checkout, name='checkout'),
     path('likes/user/', user_likes),
     path('likes/toggle/<int:post_id>/', toggle_like),
     path('likes/count/<int:post_id>/', views.like_count_view),

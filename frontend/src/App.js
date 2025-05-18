@@ -24,10 +24,12 @@ import './App.css';
 import SearchPage from './pages/SearchPage';
 import RequireAuth from './components/auth/RequireAuth';
 import Faq from './pages/FaqPage'; // Import the Faq component
+import { CartProvider } from './context/CartContext';
 
 function App() {
   return (
     <AuthProvider>
+      <CartProvider>
       <BrowserRouter>
         <ScrollToTop />
         <Navbar />  
@@ -55,6 +57,7 @@ function App() {
 
         <Footer />
       </BrowserRouter>
+      </CartProvider>
     </AuthProvider>
   );
 }

@@ -1,10 +1,11 @@
 from django.shortcuts import render
+from rest_framework import status
 from django.db.models import Q
 from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from .models import Post, Comentario, Evento, Like, Compra, Produto
+from .models import Post, Comentario, Evento, Like, Compra, Produto, Entrega
 from .serializers import PostSerializer, ComentarioSerializer, EventoSerializer, LikeSerializer, CompraSerializer, ProdutoSerializer
 from rest_framework.permissions import IsAuthenticated
 
@@ -268,3 +269,56 @@ def delete_post(request, post_id):
 
     except Post.DoesNotExist:
         return Response({'detail': 'Post não encontrado.'}, status=404)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def checkout(request):
+    user = request.user
+    compras_data = request.data.get('compras', [])
+    entrega_data = request.data.get('entrega', {})
+
+    if not compras_data:
+        return Response({'error': 'Carrinho vazio.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Criar registo de entrega
+    entrega = Entrega.objects.create(
+        utilizador=user,
+        nome=entrega_data.get('fullName'),
+        email=entrega_data.get('email'),
+        telefone=entrega_data.get('phone'),
+        morada=entrega_data.get('address'),
+        cidade=entrega_data.get('city'),
+        codigo_postal=entrega_data.get('zipCode'),
+        metodo_pagamento=entrega_data.get('paymentMethod')
+    )
+
+    compras_registadas = []
+
+    for item in compras_data:
+        produto_id = item.get('produto_id')
+        preco = item.get('preco')
+        quantidade = item.get('quantidade', 1)
+        data = item.get('data')
+
+        try:
+            produto = Produto.objects.get(id=produto_id)
+
+            if produto.stock < quantidade:
+                return Response({'error': f'Sem stock suficiente para {produto.nome}.'}, status=400)
+
+            produto.stock -= quantidade
+            produto.save()
+
+            compra = Compra.objects.create(
+                utilizador=user,
+                produto=produto,
+                preco=preco,
+                data=data,
+                quantidade=quantidade
+            )
+            compras_registadas.append(CompraSerializer(compra).data)
+
+        except Produto.DoesNotExist:
+            return Response({'error': f'Produto {produto_id} não existe.'}, status=404)
+
+    return Response({'compras': compras_registadas}, status=201)
